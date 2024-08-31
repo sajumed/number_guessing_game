@@ -1,0 +1,16 @@
+{
+  "name": "number-guessing-game",
+  "version": "1.0.0",
+  "description": "An interactive console number guessing game",
+  "main": "gameInterface.js",
+  "scripts": {
+    "start": "node gameInterface.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": ["game", "console", "guessing", "interactive"],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  }
+}
