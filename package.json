@@ -2,9 +2,9 @@
   "name": "number-guessing-game",
   "version": "1.0.0",
   "description": "An interactive console number guessing game",
-  "main": "gameInterface.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node gameInterface.js",
+    "start": "node index.js",
     "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": ["game", "console", "guessing", "interactive"],
