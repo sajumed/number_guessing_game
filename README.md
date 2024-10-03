@@ -1,79 +1,69 @@
 ## Number Guessing Game
 
-An interactive console-based number guessing game where players try to guess a randomly generated number within a specified range.
+A simple interactive console game where players try to guess a randomly generated number.
 
-### 🚀 How to Use
+### 🎮 How to Play
 
-#### Prerequisites
-- Node.js (version 12 or higher)
-
-#### Installation & Running
-
-1. **Save the files** in a directory:
-   - `game.js` - Core game logic
-   - `consoleInterface.js` - Console interaction handling
-   - `index.js` - Main entry point
-   - `package.json` - Project configuration
-
-2. **Run the game**:
+1. **Setup**: Ensure you have Node.js installed on your computer
+2. **Installation**: No additional packages required - uses only Node.js built-in modules
+3. **Start the Game**: Run the game using one of the following commands:
    ```bash
-   node index.js
+   node game.js
    ```
-
-   Or if you have the package.json configured:
+   or if you have the package.json:
    ```bash
    npm start
    ```
 
-#### 🎮 Game Commands
+### 🎯 Game Rules
 
-- **Enter a number** - Make a guess
-- **`status`** - Show current game status (range, attempts, etc.)
-- **`new`** - Start a new game with the same range
-- **`range <min> <max>`** - Start a new game with custom range
-- **`help`** - Show available commands
-- **`quit` or `exit`** - Exit the game
+- The computer generates a random number between 1 and 100
+- You have 10 attempts to guess the correct number
+- After each guess, you'll receive feedback:
+  - "Too low!" if your guess is below the target number
+  - "Too high!" if your guess is above the target number
+- If you guess correctly within 10 attempts, you win!
+- If you use all 10 attempts without guessing correctly, you lose
 
-#### 🎯 Gameplay Example
+### 🛠️ Features
 
-```
-🎯 Welcome to the Number Guessing Game!
-========================================
-I'm thinking of a number between 1 and 100
-Type "help" for available commands
-----------------------------------------
-🎯 Enter your guess: 50
-
-📉 Too high! Try a lower number.
-
-🎯 Enter your guess: 25
-
-📈 Too low! Try a higher number.
-
-🎯 Enter your guess: 37
-
-🎉 Congratulations! You guessed the number 37 in 3 attempts!
-
-🔄 Would you like to play again? (y/n): y
-
-🔄 New game started! Guess a number between 1 and 100
-```
+- **Input Validation**: Handles invalid inputs gracefully
+- **Hint System**: Provides directional hints (too high/too low)
+- **Attempt Tracking**: Shows current attempt count
+- **Play Again**: Option to restart the game after completion
+- **Customizable**: Easy to modify game settings in `game-config.js`
 
 ### 📁 File Structure
 
-- `game.js` - Contains the core game logic with the `NumberGuessingGame` class
-- `consoleInterface.js` - Handles console input/output and user interaction
-- `index.js` - Main application entry point
-- `package.json` - Node.js project configuration
+- `game.js` - Main game logic and user interaction
+- `game-config.js` - Configuration file for game settings
+- `package.json` - Project configuration (optional)
 
-### 🛠 Features
+### 🔧 Customization
 
-- Random number generation within customizable ranges
-- Attempt tracking
-- Interactive console interface
-- Multiple game commands
-- Input validation
-- Graceful error handling
-- Play again functionality
+You can easily modify the game by editing `game-config.js`:
+- Change the number range (MIN_RANGE, MAX_RANGE)
+- Adjust the number of attempts (MAX_ATTEMPTS)
+- Customize game messages
 
-Enjoy playing! 🎮
+### 🎲 Example Game Session
+
+```
+🎯 Welcome to the Number Guessing Game!
+I'm thinking of a number between 1 and 100
+You have 10 attempts to guess it correctly.
+
+Enter your guess (1/10): 50
+📉 Too high! Try a lower number.
+
+Enter your guess (2/10): 25
+📈 Too low! Try a higher number.
+
+Enter your guess (3/10): 37
+🎉 Congratulations! You guessed the number 37 in 3 attempts!
+
+Would you like to play again? (y/n): n
+Thanks for playing! 👋
+```
+
+Enjoy the game! 🎮
