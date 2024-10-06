@@ -1,74 +1,82 @@
-/**
- * Interactive Number Guessing Game
- * Player tries to guess a randomly generated number within a specified range
- */
-
 class NumberGuessingGame {
-    constructor(min = 1, max = 100) {
-        this.min = min;
-        this.max = max;
-        this.secretNumber = this.generateRandomNumber();
+    constructor() {
+        this.minRange = 1;
+        this.maxRange = 100;
+        this.targetNumber = 0;
         this.attempts = 0;
-        this.gameOver = false;
+        this.maxAttempts = 10;
+        this.gameActive = false;
     }
 
-    /**
-     * Generate a random number between min and max (inclusive)
-     */
     generateRandomNumber() {
-        return Math.floor(Math.random() * (this.max - this.min + 1)) + this.min;
+        this.targetNumber = Math.floor(Math.random() * (this.maxRange - this.minRange + 1)) + this.minRange;
     }
 
-    /**
-     * Process player's guess
-     * @param {number} guess - Player's guess
-     * @returns {string} Feedback message
-     */
-    makeGuess(guess) {
-        if (this.gameOver) {
-            return "Game is already over! Start a new game to play again.";
+    startNewGame() {
+        this.generateRandomNumber();
+        this.attempts = 0;
+        this.gameActive = true;
+        console.log(`🎮 New game started! Guess a number between ${this.minRange} and ${this.maxRange}`);
+        console.log(`You have ${this.maxAttempts} attempts to guess the correct number.`);
+    }
+
+    processGuess(userGuess) {
+        if (!this.gameActive) {
+            console.log("❌ No active game. Type 'start' to begin a new game.");
+            return;
+        }
+
+        const guess = parseInt(userGuess);
+        
+        if (isNaN(guess)) {
+            console.log("❌ Please enter a valid number.");
+            return;
         }
 
         this.attempts++;
 
-        if (guess === this.secretNumber) {
-            this.gameOver = true;
-            return `🎉 Congratulations! You guessed the number ${this.secretNumber} in ${this.attempts} attempts!`;
-        } else if (guess < this.secretNumber) {
-            return "📈 Too low! Try a higher number.";
+        if (guess === this.targetNumber) {
+            console.log(`🎉 Congratulations! You guessed the correct number ${this.targetNumber} in ${this.attempts} attempts!`);
+            this.gameActive = false;
+            return true;
+        } else if (guess < this.targetNumber) {
+            console.log(`📈 Too low! Try a higher number. (Attempt ${this.attempts}/${this.maxAttempts})`);
         } else {
-            return "📉 Too high! Try a lower number.";
+            console.log(`📉 Too high! Try a lower number. (Attempt ${this.attempts}/${this.maxAttempts})`);
+        }
+
+        if (this.attempts >= this.maxAttempts) {
+            console.log(`💀 Game over! The correct number was ${this.targetNumber}.`);
+            console.log("Type 'start' to play again.");
+            this.gameActive = false;
+        }
+
+        return false;
+    }
+
+    showHint() {
+        if (!this.gameActive) {
+            console.log("❌ No active game. Start a game first.");
+            return;
+        }
+
+        const range = Math.floor((this.maxRange - this.minRange) / 4);
+        if (this.targetNumber <= this.minRange + range) {
+            console.log("💡 Hint: The number is in the lower quarter of the range.");
+        } else if (this.targetNumber <= this.minRange + range * 2) {
+            console.log("💡 Hint: The number is in the lower middle quarter of the range.");
+        } else if (this.targetNumber <= this.minRange + range * 3) {
+            console.log("💡 Hint: The number is in the upper middle quarter of the range.");
+        } else {
+            console.log("💡 Hint: The number is in the upper quarter of the range.");
         }
     }
 
-    /**
-     * Get current game status
-     */
-    getStatus() {
-        return {
-            min: this.min,
-            max: this.max,
-            attempts: this.attempts,
-            gameOver: this.gameOver
-        };
-    }
-
-    /**
-     * Start a new game with the same range
-     */
-    reset() {
-        this.secretNumber = this.generateRandomNumber();
-        this.attempts = 0;
-        this.gameOver = false;
-        return `🔄 New game started! Guess a number between ${this.min} and ${this.max}`;
-    }
-
-    /**
-     * Get a hint (tells if number is even/odd)
-     */
-    getHint() {
-        return `💡 Hint: The number is ${this.secretNumber % 2 === 0 ? 'even' : 'odd'}.`;
+    showStats() {
+        console.log(`📊 Game Stats:`);
+        console.log(`   Range: ${this.minRange}-${this.maxRange}`);
+        console.log(`   Target Number: ${this.gameActive ? '???' : this.targetNumber}`);
+        console.log(`   Attempts: ${this.attempts}/${this.maxAttempts}`);
+        console.log(`   Game Status: ${this.gameActive ? 'Active' : 'Not Active'}`);
     }
 }
-
-module.exports = NumberGuessingGame;
