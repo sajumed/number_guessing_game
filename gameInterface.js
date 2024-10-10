@@ -1,156 +1,91 @@
-const NumberGuessingGame = require('./numberGame.js');
 const readline = require('readline');
+const { NumberGuessingGame } = require('./numberGame.js');
 
-/**
- * Console interface for the Number Guessing Game
- */
 class GameInterface {
     constructor() {
+        this.game = new NumberGuessingGame();
         this.rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
-        this.game = null;
-        this.setupGame();
     }
 
-    /**
-     * Initialize game with user-specified range
-     */
-    setupGame() {
-        console.log("🎯 Welcome to the Number Guessing Game! 🎯\n");
-        
-        this.rl.question("Enter the minimum number (default: 1): ", (minInput) => {
-            this.rl.question("Enter the maximum number (default: 100): ", (maxInput) => {
-                const min = minInput ? parseInt(minInput) : 1;
-                const max = maxInput ? parseInt(maxInput) : 100;
-                
-                if (isNaN(min) || isNaN(max) || min >= max) {
-                    console.log("❌ Invalid range! Using default range 1-100.");
-                    this.game = new NumberGuessingGame();
-                } else {
-                    this.game = new NumberGuessingGame(min, max);
-                }
-                
-                console.log(`\n🎮 Game started! Guess a number between ${this.game.min} and ${this.game.max}`);
-                console.log("💡 Type 'help' for available commands\n");
-                this.startGameLoop();
-            });
-        });
+    displayWelcome() {
+        console.log('========================================');
+        console.log('    🎯 NUMBER GUESSING GAME 🎯');
+        console.log('========================================');
+        console.log('Commands:');
+        console.log('  start    - Start a new game');
+        console.log('  hint     - Get a hint');
+        console.log('  stats    - Show game statistics');
+        console.log('  quit     - Exit the game');
+        console.log('  help     - Show this help message');
+        console.log('========================================\n');
     }
 
-    /**
-     * Main game loop
-     */
-    startGameLoop() {
-        this.promptGuess();
-    }
+    processCommand(input) {
+        const command = input.toLowerCase().trim();
 
-    /**
-     * Prompt user for input
-     */
-    promptGuess() {
-        this.rl.question("\nEnter your guess: ", (input) => {
-            this.processInput(input.trim().toLowerCase());
-        });
-    }
-
-    /**
-     * Process user input and execute commands
-     */
-    processInput(input) {
-        switch (input) {
-            case 'help':
-                this.showHelp();
+        switch (command) {
+            case 'start':
+                this.game.startNewGame();
                 break;
+
             case 'hint':
-                console.log(this.game.getHint());
+                this.game.showHint();
                 break;
-            case 'status':
-                this.showStatus();
+
+            case 'stats':
+                this.game.showStats();
                 break;
-            case 'new':
-                console.log(this.game.reset());
+
+            case 'help':
+                this.displayWelcome();
                 break;
+
             case 'quit':
-            case 'exit':
-                this.quitGame();
-                return;
+                console.log('👋 Thanks for playing! Goodbye!');
+                this.rl.close();
+                return true;
+
+            case '':
+                // Empty input, do nothing
+                break;
+
             default:
-                this.handleGuess(input);
+                // Try to process as a number guess
+                if (!isNaN(parseInt(command))) {
+                    this.game.processGuess(command);
+                } else {
+                    console.log('❌ Unknown command. Type "help" for available commands.');
+                }
+                break;
         }
-        
-        if (input !== 'quit' && input !== 'exit') {
-            this.promptGuess();
-        }
+
+        return false;
     }
 
-    /**
-     * Handle number guess input
-     */
-    handleGuess(input) {
-        const guess = parseInt(input);
+    start() {
+        this.displayWelcome();
         
-        if (isNaN(guess)) {
-            console.log("❌ Please enter a valid number or command.");
-            return;
-        }
-
-        const result = this.game.makeGuess(guess);
-        console.log(result);
-
-        if (this.game.gameOver) {
-            this.rl.question("\nPlay again? (y/n): ", (answer) => {
-                if (answer.toLowerCase() === 'y') {
-                    console.log(this.game.reset());
-                    this.promptGuess();
-                } else {
-                    this.quitGame();
+        const askForInput = () => {
+            this.rl.question('\n🎮 Enter your guess or command: ', (input) => {
+                const shouldQuit = this.processCommand(input);
+                
+                if (!shouldQuit) {
+                    askForInput();
                 }
             });
-        }
-    }
+        };
 
-    /**
-     * Display help information
-     */
-    showHelp() {
-        console.log(`
-📋 Available Commands:
-- [number]     : Make a guess
-- hint         : Get a hint (even/odd)
-- status       : Show game status
-- new          : Start a new game
-- help         : Show this help message
-- quit/exit    : Quit the game
-        `);
-    }
-
-    /**
-     * Display current game status
-     */
-    showStatus() {
-        const status = this.game.getStatus();
-        console.log(`
-📊 Game Status:
-- Range: ${status.min} to ${status.max}
-- Attempts: ${status.attempts}
-- Game Over: ${status.gameOver ? 'Yes' : 'No'}
-        `);
-    }
-
-    /**
-     * Clean up and exit game
-     */
-    quitGame() {
-        console.log("\n👋 Thanks for playing! Goodbye!");
-        this.rl.close();
+        askForInput();
     }
 }
 
 // Start the game if this file is run directly
 if (require.main === module) {
-    new GameInterface();
+    const gameInterface = new GameInterface();
+    gameInterface.start();
 }
 
-module.exports = GameInterface;
+module.exports = { GameInterface };
