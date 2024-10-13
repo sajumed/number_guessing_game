@@ -2,13 +2,13 @@
   "name": "number-guessing-game",
   "version": "1.0.0",
   "description": "An interactive console number guessing game",
-  "main": "game.js",
+  "main": "gameInterface.js",
   "scripts": {
-    "start": "node game.js",
-    "play": "node game.js"
+    "start": "node gameInterface.js",
+    "play": "node gameInterface.js"
   },
   "keywords": ["game", "console", "guessing", "interactive"],
-  "author": "Game Developer",
+  "author": "Your Name",
   "license": "MIT",
   "engines": {
     "node": ">=12.0.0"
